@@ -12,10 +12,13 @@ import {
   Query,
   Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors
 } from '@nestjs/common'
-import { UpdateLocationDTO } from './dto/location.dto'
+import { FileUploadDto, UpdateLocationDTO } from './dto/location.dto'
 import { diskStorage } from 'multer'
+import { ApiOperation, ApiBody, ApiResponse, ApiConsumes } from '@nestjs/swagger'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('location')
 export class LocationController {
@@ -58,20 +61,25 @@ export class LocationController {
   }
 
   @Post('upload/:id')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'List of cats',
+    type: FileUploadDto
+  })
   @UseInterceptors(
-    FileInterceptor('image', {
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: `${process.cwd()}/public/img`,
         filename: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-          cb(null, file.fieldname + '-' + uniqueSuffix + '.jpg')
+          const ext = file.originalname.split('.').pop() // get the file extension
+          cb(null, file.fieldname + '-' + uniqueSuffix + '.' + ext)
         }
       })
     })
   )
   async uploadImage(@UploadedFile() file, @Param('id', ParseIntPipe) userId: number): Promise<any> {
     // Sau khi tải lên ảnh, bạn có thể lưu thông tin về ảnh vào cơ sở dữ liệu tại đây.
-
     return await this.locationService.createImage(file, userId)
   }
 }

@@ -11,18 +11,28 @@ import {
   Param,
   Put,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
+  Header,
+  Headers
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { GetUser } from 'src/auth/decorator/user.decorator'
-import { CreateUserDTO, UpdateUserDTOById } from './dto/user.dto'
+import { FileUploadDto, UserDTO } from './dto/user.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
-import { v2 as cloudinary } from 'cloudinary'
+import { ApiOperation, ApiBody, ApiResponse, ApiConsumes, ApiBearerAuth, ApiHeader } from '@nestjs/swagger'
+import { AuthGuard } from '@nestjs/passport'
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get()
+  getAllUsers() {
+    return this.userService.getAllUsers()
+  }
 
   @Get('phan-trang-tim-kiem')
   searchUserByPage(
@@ -35,18 +45,13 @@ export class UserController {
     return this.userService.searchUserByPage(pageIndex, pageSize, keyword)
   }
 
-  @Get()
-  getAllUsers() {
-    return this.userService.getAllUsers()
-  }
-
   @Get(':id')
   getUserById(@Param('id', ParseIntPipe) userId: number) {
     return this.userService.getUserById(userId)
   }
 
   @Post()
-  createUser(@Body() createUserDTO: CreateUserDTO) {
+  createUser(@Body() createUserDTO: UserDTO) {
     return this.userService.createUser(createUserDTO)
   }
 
@@ -56,7 +61,7 @@ export class UserController {
   }
 
   @Put(':id')
-  putUserById(@Param('id', ParseIntPipe) userId: number, @Body() updateUserDTOById: UpdateUserDTOById) {
+  putUserById(@Param('id', ParseIntPipe) userId: number, @Body() updateUserDTOById: UserDTO) {
     return this.userService.putUserById(userId, updateUserDTOById)
   }
 
@@ -66,8 +71,13 @@ export class UserController {
   }
 
   @Post('upload/:id')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'List of cats',
+    type: FileUploadDto
+  })
   @UseInterceptors(
-    FileInterceptor('image', {
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: `${process.cwd()}/public/img`,
         filename: (req, file, cb) => {
@@ -80,7 +90,6 @@ export class UserController {
   )
   async uploadImage(@UploadedFile() file, @Param('id', ParseIntPipe) userId: number): Promise<any> {
     // Sau khi tải lên ảnh, bạn có thể lưu thông tin về ảnh vào cơ sở dữ liệu tại đây.
-
     return await this.userService.createImage(file, userId)
   }
 }

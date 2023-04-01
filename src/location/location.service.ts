@@ -7,7 +7,7 @@ import {
   NotFoundException
 } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { UpdateUserDTOById } from 'src/user/dto/user.dto'
+ 
 import * as zlib from 'zlib'
 import * as fs from 'fs/promises'
 import * as path from 'path'
@@ -79,9 +79,11 @@ export class LocationService {
 
   async deleteLocationById(locationId: number) {
     try {
-      return await this.prismaService.location.delete({
+      const deleteLocation = await this.prismaService.location.delete({
         where: { id: +locationId }
       })
+
+      return { message: 'Xóa thành công', deleteLocation }
     } catch (error) {
       if (error.code === 'P2025') {
         return new NotFoundException()

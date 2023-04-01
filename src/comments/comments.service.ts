@@ -40,7 +40,7 @@ export class CommentsService {
     }
   }
 
-  async updateCommentbyuser(commentDTO: CommentsDTO, id: number): Promise<CommentsDTO> {
+  async updateCommentbyuser(commentDTO: CommentsDTO, id: number): Promise<any> {
     // Async function for updating an existing comment, takes commentDTO as an input and comment id as the parameters, returns updated comment DTO.
 
     try {
@@ -56,7 +56,7 @@ export class CommentsService {
           rate: commentDTO.rate
         }
       })
-      return updatecomment // Returns updated comment DTO storage operation was successful.
+      return { message: 'Update comment success', updatecomment } // Returns updated comment DTO storage operation was successful.
     } catch (error) {
       const { code } = error
       if (code === 'P2003') {

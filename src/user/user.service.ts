@@ -1,4 +1,4 @@
-import { UpdateUserDTOById, CreateUserDTO } from './dto/user.dto'
+import { UserDTO } from './dto/user.dto'
 import { Injectable, ForbiddenException, InternalServerErrorException, BadRequestException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import * as argon from 'argon2'
@@ -15,7 +15,7 @@ export class UserService {
     return await this.prismaService.user.findMany({})
   }
 
-  async createUser(createUserDTO: CreateUserDTO) {
+  async createUser(createUserDTO: UserDTO) {
     try {
       const hashedPassword = await argon.hash(createUserDTO.password)
       console.log(hashedPassword)
@@ -27,7 +27,7 @@ export class UserService {
           gender: createUserDTO.gender,
           phone: createUserDTO.phone,
           birthday: new Date(createUserDTO.birthday),
-          role: 'Customer'
+          role: createUserDTO.role
         },
         select: {
           id: true,
@@ -106,7 +106,7 @@ export class UserService {
     return user
   }
 
-  async putUserById(userId: number, { email, name, phone, gender, role, birthday, password }: UpdateUserDTOById) {
+  async putUserById(userId: number, { email, name, phone, gender, role, birthday, password }: UserDTO) {
     const hashPassword = await argon.hash(password)
 
     try {
