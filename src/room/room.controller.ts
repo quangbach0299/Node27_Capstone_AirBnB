@@ -1,11 +1,11 @@
 import { Delete, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Param, ParseIntPipe, Query, Post, Body } from '@nestjs/common'
-import { RoomDTO } from './dto/room.dto'
+import { FileRoomUploadDto, RoomDTO } from './dto/room.dto'
 import { RoomService } from './room.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport'
 
 @ApiTags('Room')
@@ -19,7 +19,7 @@ export class RoomController {
     return this.roomService.getAllRooms()
   }
 
-  @Get('pagination')
+  @Get('phan-trang-tim-kiem')
   getPagination(
     @Query('limit', ParseIntPipe) limit: number,
     @Query('page', ParseIntPipe) page: number,
@@ -59,6 +59,11 @@ export class RoomController {
   }
 
   @Post('upload/:id')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Image Upload',
+    type: FileRoomUploadDto
+  })
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({

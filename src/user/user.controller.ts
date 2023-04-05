@@ -1,4 +1,3 @@
-import { MyJwtGuard } from 'src/auth/guard'
 import {
   Controller,
   Get,
@@ -16,8 +15,8 @@ import {
   Headers
 } from '@nestjs/common'
 import { UserService } from './user.service'
-import { GetUser } from 'src/auth/decorator/user.decorator'
-import { FileUploadDto, UserDTO } from './dto/user.dto'
+
+import { FileUploadUserDto, UserDTO } from './dto/user.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { ApiOperation, ApiBody, ApiResponse, ApiConsumes, ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger'
@@ -74,8 +73,8 @@ export class UserController {
   @Post('upload/:id')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'List of cats',
-    type: FileUploadDto
+    description: 'Image Upload',
+    type: FileUploadUserDto
   })
   @UseInterceptors(
     FileInterceptor('file', {

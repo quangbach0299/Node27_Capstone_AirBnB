@@ -83,7 +83,7 @@ export class LocationService {
         where: { id: +locationId }
       })
 
-      return { message: 'Xóa thành công', deleteLocation }
+      return { message: 'Delete sucessfully', deleteLocation }
     } catch (error) {
       if (error.code === 'P2025') {
         return new NotFoundException()

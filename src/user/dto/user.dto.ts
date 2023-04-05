@@ -35,7 +35,7 @@ export class UserDTO {
   role: string
 }
 
-export class FileUploadDto {
+export class FileUploadUserDto {
   @ApiProperty({ type: 'string', format: 'binary' })
   file: any
 }

@@ -15,9 +15,9 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
-import { FileUploadDto, UpdateLocationDTO } from './dto/location.dto'
+import { FileLocationUploadDto, UpdateLocationDTO } from './dto/location.dto'
 import { diskStorage } from 'multer'
-import { ApiOperation, ApiBody, ApiResponse, ApiConsumes, ApiTags, ApiBearerAuth } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiTags, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport'
 
 @ApiTags('Location')
@@ -66,8 +66,8 @@ export class LocationController {
   @Post('upload/:id')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'List of cats',
-    type: FileUploadDto
+    description: 'Image Upload',
+    type: FileLocationUploadDto
   })
   @UseInterceptors(
     FileInterceptor('file', {

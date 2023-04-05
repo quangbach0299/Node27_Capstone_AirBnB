@@ -58,3 +58,8 @@ export class RoomDTO {
   @ApiProperty({ description: 'location_id', type: Number })
   location_id: number
 }
+
+export class FileRoomUploadDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  file: any
+}

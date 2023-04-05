@@ -18,7 +18,7 @@ export class UpdateLocationDTO {
   image: string
 }
 
-export class FileUploadDto {
+export class FileLocationUploadDto {
   @ApiProperty({ type: 'string', format: 'binary' })
   file: any
 }
