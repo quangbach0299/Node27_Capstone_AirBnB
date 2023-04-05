@@ -1,9 +1,11 @@
 import { PrismaClient } from '@prisma/client'
 /* eslint-disable prettier/prettier */
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { RoomDTO } from './dto/room.dto'
 import { Prisma } from '@prisma/client'
+import * as path from 'path'
+import * as fs from 'fs/promises'
 
 @Injectable()
 export class RoomService {
@@ -135,6 +137,31 @@ export class RoomService {
       }
 
       throw new BadRequestException()
+    }
+  }
+
+  async createImage(file: any, roomid: number): Promise<any> {
+    try {
+      const { filename, mimetype } = file
+      const filePath = path.join(process.cwd(), 'public', 'img', filename)
+
+      const data = await fs.readFile(filePath)
+
+      // File base 64 encoded
+      const base64 = `data:${mimetype};base64,${data.toString('base64')}`
+
+      await fs.unlink(filePath)
+
+      return await this.prismaService.room.update({
+        where: { id: roomid },
+        data: { image: base64 }
+      })
+    } catch (err) {
+      if (err.code === 'P2025') {
+        throw new ForbiddenException('Room not found')
+      }
+      console.error('Error reading or deleting file:', err)
+      throw err
     }
   }
 }

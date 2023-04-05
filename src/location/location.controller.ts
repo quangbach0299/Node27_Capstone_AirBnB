@@ -17,9 +17,12 @@ import {
 } from '@nestjs/common'
 import { FileUploadDto, UpdateLocationDTO } from './dto/location.dto'
 import { diskStorage } from 'multer'
-import { ApiOperation, ApiBody, ApiResponse, ApiConsumes } from '@nestjs/swagger'
+import { ApiOperation, ApiBody, ApiResponse, ApiConsumes, ApiTags, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport'
 
+@ApiTags('Location')
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('location')
 export class LocationController {
   constructor(private locationService: LocationService) {}

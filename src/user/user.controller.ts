@@ -20,9 +20,10 @@ import { GetUser } from 'src/auth/decorator/user.decorator'
 import { FileUploadDto, UserDTO } from './dto/user.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
-import { ApiOperation, ApiBody, ApiResponse, ApiConsumes, ApiBearerAuth, ApiHeader } from '@nestjs/swagger'
+import { ApiOperation, ApiBody, ApiResponse, ApiConsumes, ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport'
 
+@ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller('users')
