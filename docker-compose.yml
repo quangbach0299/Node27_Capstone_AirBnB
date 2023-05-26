@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  cons-adminer:
+    image: adminer
+    container_name: adminerairbnb
+    ports:
+      - 5000:8080
+    networks:
+      - node-network
+    links:
+      - mysql_db:db
+
   nest-api:
     container_name: nest-api
     build:
