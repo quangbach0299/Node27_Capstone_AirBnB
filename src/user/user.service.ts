@@ -1,7 +1,7 @@
 import { UserDTO } from './dto/user.dto'
 import { Injectable, ForbiddenException, InternalServerErrorException, BadRequestException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import * as argon from 'argon2'
+import * as bcrypt from 'bcrypt'
 import { Prisma } from '@prisma/client'
 import * as zlib from 'zlib'
 import * as fs from 'fs/promises'
@@ -17,7 +17,7 @@ export class UserService {
 
   async createUser(createUserDTO: UserDTO) {
     try {
-      const hashedPassword = await argon.hash(createUserDTO.password)
+      const hashedPassword = await bcrypt.hash(createUserDTO.password, 10)
       console.log(hashedPassword)
       const dataImport = await this.prismaService.user.create({
         data: {
@@ -107,7 +107,7 @@ export class UserService {
   }
 
   async putUserById(userId: number, { email, name, phone, gender, role, birthday, password }: UserDTO) {
-    const hashPassword = await argon.hash(password)
+    const hashPassword = await bcrypt.hash(password, 10)
 
     try {
       const updatedUser = await this.prismaService.user.update({

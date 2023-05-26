@@ -15,7 +15,6 @@ import {
   Headers
 } from '@nestjs/common'
 import { UserService } from './user.service'
-
 import { FileUploadUserDto, UserDTO } from './dto/user.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'

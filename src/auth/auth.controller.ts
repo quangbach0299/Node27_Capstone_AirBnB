@@ -10,7 +10,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  register(@Body() registerDTO: RegisterAuthDTO, @Req() req: Request) {
+  register(@Body() registerDTO: RegisterAuthDTO) {
     // not validate using class validator
     return this.authService.register(registerDTO)
   }
