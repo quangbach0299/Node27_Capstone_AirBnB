@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   cons-adminer:
@@ -13,17 +13,13 @@ services:
 
   nest-api:
     container_name: nest-api
-    # image: phamducai2009/airbnb-nest-api:v.1.0.0
-
     build:
       context: .
     ports:
       - 3000:6969
     depends_on:
       - mysql_db
-    env_file:
-      - DATABASE_URL=mysql://root:1234@mysql_db:3306/db_capstone_airbnb?schema=publics
-      - JWT_SECRET = "node 27"
+    env_file: .env
     networks:
       - node-network
 
